@@ -33,7 +33,7 @@ export const Route = createRootRoute({
       </div>
       <hr />
       <Outlet />
-      {process.env.NODE_ENV === "development" && <TanStackRouterDevtools />}
+      {import.meta.env.MODE === "development" && <TanStackRouterDevtools />}
     </>
   ),
 });
