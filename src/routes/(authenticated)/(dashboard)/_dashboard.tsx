@@ -1,0 +1,23 @@
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import VerticalNav from "../../../components/layout/vertical-nav";
+
+export const Route = createFileRoute("/(authenticated)/(dashboard)/_dashboard")(
+  {
+    component: Dashboard,
+  }
+);
+
+function Dashboard() {
+  return (
+    <>
+      <div className="flex">
+        <div>
+          <VerticalNav></VerticalNav>
+        </div>
+        <div className="min-h-screen ml-[300px] p-10">
+          <Outlet />
+        </div>
+      </div>
+    </>
+  );
+}
