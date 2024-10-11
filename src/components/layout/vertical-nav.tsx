@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 
@@ -10,7 +10,7 @@ const NavLink = ({ link, title }: { link: string; title: string }) => {
   return (
     <Link
       to={link}
-      className={cn("my-3 text-xl font-semibold hover:text-[#EAD8B1]", {
+      className={cn("my-3 text-xl font-semibold block hover:text-[#EAD8B1]", {
         "text-[#EAD8B1]": isActive(link),
       })}
     >
@@ -28,12 +28,12 @@ const navLinks = [
 
 export default function VerticalNav() {
   return (
-    <SimpleBar className="h-screen w-[300px] fixed bg-[#001F3F] text-white overflow-auto flex flex-col p-7">
+    <div className="h-screen w-[300px] fixed bg-[#001F3F] text-white overflow-auto flex flex-col p-7">
       <div className="flex items-center justify-between">
         <img src="/logo-nav.svg" alt="logo" className="w-[100px] h-[100px]" />
         <h1 className="font-bold text-2xl">WORKGO</h1>
       </div>
-      <div className="flex flex-col mt-10">
+      <SimpleBar className="flex flex-col mt-10 max-h-[200px]">
         {navLinks.map((navLink) => (
           <NavLink
             key={navLink.link}
@@ -41,7 +41,7 @@ export default function VerticalNav() {
             title={navLink.title}
           />
         ))}
-      </div>
+      </SimpleBar>
       <div className="mt-28 flex flex-col gap-4">
         <img
           src="/avatar.png"
@@ -53,6 +53,6 @@ export default function VerticalNav() {
           <p className="text-md">sophiebrown@gmail.com</p>
         </div>
       </div>
-    </SimpleBar>
+    </div>
   );
 }
