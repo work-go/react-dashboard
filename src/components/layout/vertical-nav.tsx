@@ -1,86 +1,100 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, LinkProps, useLocation } from "@tanstack/react-router";
 import { cn } from "../../lib/utils";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import {
   Briefcase,
+  ChevronDown,
   Dock,
   FileUser,
   LayoutDashboard,
+  LucideProps,
   MessageCircle,
-  Search,
 } from "lucide-react";
-import { ReactElement } from "react";
+import { FC, PropsWithChildren, RefAttributes } from "react";
 
-const NavLink = ({
-  link,
-  title,
-  icon,
-}: {
-  link: string;
-  title: string;
-  icon: ReactElement;
-}) => {
-  const currentRoute = useLocation();
-  const isActive = (path: string) => currentRoute.pathname === path;
+const NavLink: FC<
+  PropsWithChildren<{
+    to: LinkProps["to"];
+    icon: FC<LucideProps & RefAttributes<SVGSVGElement>>;
+  }>
+> = ({ to, icon: Icon, children }) => {
+  const location = useLocation();
+  const isActive = location.pathname === to;
 
   return (
     <Link
-      to={link}
+      to={to}
       className={cn(
-        " my-1 font-semibold block rounded-lg p-2 hover:bg-gradient-to-b  hover:from-[#303032] hover:to-[#1d1d1f] hover:shadow-2xl",
+        "flex gap-2 items-center justify-start w-full rounded px-6 py-3 text-gray-300 hover:text-white hover:bg-[#101012] transition-colors group",
         {
-          "bg-gradient-to-b from-[#303032] to-[#1d1d1f] shadow-lg":
-            isActive(link),
+          "text-white bg-[#101012]": isActive,
         }
       )}
     >
-      <div className="flex items-center gap-2">
-        {icon}
-        {title}
-      </div>
+      <Icon
+        className={cn("w-5 h-5 group-hover:text-[#99ff00]  transition-colors", {
+          "text-[#99ff00]": isActive,
+        })}
+        strokeWidth={1}
+      />
+      {children}
     </Link>
   );
 };
 
-const navLinks = [
-  {
-    link: "/dashboard",
-    title: "Dashboard",
-    icon: <LayoutDashboard />,
-  },
-  { link: "/resume", title: "Resume", icon: <FileUser /> },
-  { link: "/applications", title: "Applications", icon: <Dock /> },
-  { link: "/find-jobs", title: "Find Jobs", icon: <Briefcase /> },
-];
-
 export default function VerticalNav() {
   return (
-    <div className="h-screen w-[300px] fixed bg-[#161618] text-white overflow-auto flex flex-col px-5 py-10">
-      <div className="flex items-center justify-start gap-3">
-        <img src="/logo.png" alt="logo" className="w-[30px] h-[30px]" />
-        <h1 className="font-semibold text-Xl">WORKGO</h1>
-      </div>
-      <div className="flex items-center gap-2 px-[10px] py-[5px] mt-6 text-white bg-transparent border border-gray-500 rounded-lg">
-        <Search className="w-5 h-5 text-gray-400 "></Search>
-        <input
-          type="text"
-          placeholder="Search"
-          className="w-[150px] bg-transparent border-0 outline-none "
-        />
-      </div>
-      <SimpleBar className="flex flex-col h-full max-h-[400px] mt-5">
-        <div className="mb-5">
-          {navLinks.map((navLink) => (
-            <NavLink
-              icon={navLink.icon}
-              key={navLink.link}
-              link={navLink.link}
-              title={navLink.title}
-            />
-          ))}
+    <div className="h-screen w-[300px] fixed bg-[#161618] text-white overflow-auto flex flex-col  p-3 gap-3">
+      <div className="flex items-center justify-start gap-2 px-6 py-3 rounded-lg hover:bg-[#101012] cursor-pointer transition-colors group">
+        <img src="/logo.png" alt="Work Go" className="w-14 h-14" />
+        <div className="w-full flex justify-between gap-2">
+          <div className="space-y-1.5">
+            <h1 className="font-bold text-2xl leading-4">Work Go</h1>
+            <p className="text-gray-100 group-hover:text-white transition-colors tracking-widest font-extralight text-xs">
+              app.workgo.com
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="text-gray-100 group-hover:text-[#99ff00] transition-colors shrink-0"
+          >
+            <ChevronDown className="w-4 h-4" />
+          </button>
         </div>
-        <div className="h-[1px] bg-white"></div>
+      </div>
+
+      {/* <button className="p-2 rounded hover:bg-[#101012] text-gray-100 shrink-0 -mr-2">
+            <ArrowLeftFromLine className="w-4 h-4" />
+          </button> */}
+
+      <SimpleBar className="flex flex-col h-full max-h-[400px] pb-5">
+        <div className="space-y-4">
+          <div className="space-y-0.5">
+            <h3 className="text-[10px] font-lights uppercase tracking-[0.2rem] pl-6 pb-1 text-gray-400 opacity-80">
+              Analytics
+            </h3>
+            <NavLink icon={LayoutDashboard} to="/dashboard">
+              Dashboard
+            </NavLink>
+          </div>
+
+          <div className="space-y-0.5">
+            <h3 className="text-[10px] font-lights uppercase tracking-[0.2rem] pl-6 pb-1 text-gray-400 opacity-80">
+              Jobs
+            </h3>
+            <NavLink icon={FileUser} to="/resume">
+              Resume
+            </NavLink>
+            <NavLink icon={Dock} to="/applications">
+              Applications
+            </NavLink>
+            <NavLink icon={Briefcase} to="/find-jobs">
+              Find Jobs
+            </NavLink>
+          </div>
+        </div>
       </SimpleBar>
       <div className="flex flex-col gap-10 mt-6">
         <div className="flex items-center gap-2">
