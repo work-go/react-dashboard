@@ -1,12 +1,19 @@
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { QueryClient } from "@tanstack/react-query";
+import {
+  createRootRoute,
+  createRootRouteWithContext,
+  Outlet,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 // It's the layout component
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      {import.meta.env.MODE === "development" && <TanStackRouterDevtools />}
-    </>
-  ),
-});
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
+  {
+    component: () => (
+      <>
+        <Outlet />
+        {import.meta.env.MODE === "development" && <TanStackRouterDevtools />}
+      </>
+    ),
+  }
+);
