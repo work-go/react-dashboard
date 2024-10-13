@@ -2,12 +2,15 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { api } from "../../../../../lib/api";
+import { GoogleCallbackSearchSchema } from "../../../../../generated/rpc/auth-schema";
 
-const googleOauthCallbackQuery = (params: GoogleCallbackSearch) =>
+const googleOauthCallbackQuery = (
+  params: z.infer<typeof GoogleCallbackSearchSchema>
+) =>
   queryOptions({
     queryKey: ["google_oauth_callback", params],
     queryFn: () =>
-      api<{ authorization_url: string }>("/v1/auth/google/callback", {
+      api("/v1/auth/google/callback", {
         method: "GET",
         params,
       }),
