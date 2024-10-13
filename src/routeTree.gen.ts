@@ -13,22 +13,31 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as publicIndexImport } from './routes/(public)/index'
+import { Route as publicPublicImport } from './routes/(public)/_public'
 import { Route as authenticatedAuthenticatedImport } from './routes/(authenticated)/_authenticated'
+import { Route as publicPublicAuthImport } from './routes/(public)/_public/_auth'
 import { Route as authenticateddashboardDashboardImport } from './routes/(authenticated)/(dashboard)/_dashboard'
+import { Route as publicPublicAuthLoginImport } from './routes/(public)/_public/auth/login'
 import { Route as authenticateddashboardDashboardResumeImport } from './routes/(authenticated)/(dashboard)/_dashboard/resume'
 import { Route as authenticateddashboardDashboardFindJobsImport } from './routes/(authenticated)/(dashboard)/_dashboard/find-jobs'
 import { Route as authenticateddashboardDashboardDashboardImport } from './routes/(authenticated)/(dashboard)/_dashboard/dashboard'
 import { Route as authenticateddashboardDashboardApplicationsImport } from './routes/(authenticated)/(dashboard)/_dashboard/applications'
+import { Route as publicPublicAuthGoogleCallbackImport } from './routes/(public)/_public/auth/google/callback'
 
 // Create Virtual Routes
 
+const publicImport = createFileRoute('/(public)')()
 const authenticatedImport = createFileRoute('/(authenticated)')()
 const authenticateddashboardImport = createFileRoute(
   '/(authenticated)/(dashboard)',
 )()
 
 // Create/Update Routes
+
+const publicRoute = publicImport.update({
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const authenticatedRoute = authenticatedImport.update({
   id: '/(authenticated)',
@@ -40,9 +49,9 @@ const authenticateddashboardRoute = authenticateddashboardImport.update({
   getParentRoute: () => authenticatedRoute,
 } as any)
 
-const publicIndexRoute = publicIndexImport.update({
-  path: '/',
-  getParentRoute: () => rootRoute,
+const publicPublicRoute = publicPublicImport.update({
+  id: '/_public',
+  getParentRoute: () => publicRoute,
 } as any)
 
 const authenticatedAuthenticatedRoute = authenticatedAuthenticatedImport.update(
@@ -52,11 +61,21 @@ const authenticatedAuthenticatedRoute = authenticatedAuthenticatedImport.update(
   } as any,
 )
 
+const publicPublicAuthRoute = publicPublicAuthImport.update({
+  id: '/_auth',
+  getParentRoute: () => publicPublicRoute,
+} as any)
+
 const authenticateddashboardDashboardRoute =
   authenticateddashboardDashboardImport.update({
     id: '/_dashboard',
     getParentRoute: () => authenticateddashboardRoute,
   } as any)
+
+const publicPublicAuthLoginRoute = publicPublicAuthLoginImport.update({
+  path: '/auth/login',
+  getParentRoute: () => publicPublicRoute,
+} as any)
 
 const authenticateddashboardDashboardResumeRoute =
   authenticateddashboardDashboardResumeImport.update({
@@ -82,6 +101,12 @@ const authenticateddashboardDashboardApplicationsRoute =
     getParentRoute: () => authenticateddashboardDashboardRoute,
   } as any)
 
+const publicPublicAuthGoogleCallbackRoute =
+  publicPublicAuthGoogleCallbackImport.update({
+    path: '/auth/google/callback',
+    getParentRoute: () => publicPublicRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -100,12 +125,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authenticatedAuthenticatedImport
       parentRoute: typeof authenticatedRoute
     }
-    '/(public)/': {
+    '/(public)': {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof publicIndexImport
+      preLoaderRoute: typeof publicImport
       parentRoute: typeof rootRoute
+    }
+    '/(public)/_public': {
+      id: '/_public'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof publicPublicImport
+      parentRoute: typeof publicRoute
     }
     '/(authenticated)/(dashboard)': {
       id: '/'
@@ -120,6 +152,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof authenticateddashboardDashboardImport
       parentRoute: typeof authenticateddashboardRoute
+    }
+    '/(public)/_public/_auth': {
+      id: '/_public/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof publicPublicAuthImport
+      parentRoute: typeof publicPublicImport
     }
     '/(authenticated)/(dashboard)/_dashboard/applications': {
       id: '/_dashboard/applications'
@@ -148,6 +187,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/resume'
       preLoaderRoute: typeof authenticateddashboardDashboardResumeImport
       parentRoute: typeof authenticateddashboardDashboardImport
+    }
+    '/(public)/_public/auth/login': {
+      id: '/_public/auth/login'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof publicPublicAuthLoginImport
+      parentRoute: typeof publicPublicImport
+    }
+    '/(public)/_public/auth/google/callback': {
+      id: '/_public/auth/google/callback'
+      path: '/auth/google/callback'
+      fullPath: '/auth/google/callback'
+      preLoaderRoute: typeof publicPublicAuthGoogleCallbackImport
+      parentRoute: typeof publicPublicImport
     }
   }
 }
@@ -207,58 +260,115 @@ const authenticatedRouteWithChildren = authenticatedRoute._addFileChildren(
   authenticatedRouteChildren,
 )
 
+interface publicPublicRouteChildren {
+  publicPublicAuthRoute: typeof publicPublicAuthRoute
+  publicPublicAuthLoginRoute: typeof publicPublicAuthLoginRoute
+  publicPublicAuthGoogleCallbackRoute: typeof publicPublicAuthGoogleCallbackRoute
+}
+
+const publicPublicRouteChildren: publicPublicRouteChildren = {
+  publicPublicAuthRoute: publicPublicAuthRoute,
+  publicPublicAuthLoginRoute: publicPublicAuthLoginRoute,
+  publicPublicAuthGoogleCallbackRoute: publicPublicAuthGoogleCallbackRoute,
+}
+
+const publicPublicRouteWithChildren = publicPublicRoute._addFileChildren(
+  publicPublicRouteChildren,
+)
+
+interface publicRouteChildren {
+  publicPublicRoute: typeof publicPublicRouteWithChildren
+}
+
+const publicRouteChildren: publicRouteChildren = {
+  publicPublicRoute: publicPublicRouteWithChildren,
+}
+
+const publicRouteWithChildren =
+  publicRoute._addFileChildren(publicRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof authenticateddashboardDashboardRouteWithChildren
+  '': typeof publicPublicAuthRoute
   '/applications': typeof authenticateddashboardDashboardApplicationsRoute
   '/dashboard': typeof authenticateddashboardDashboardDashboardRoute
   '/find-jobs': typeof authenticateddashboardDashboardFindJobsRoute
   '/resume': typeof authenticateddashboardDashboardResumeRoute
+  '/auth/login': typeof publicPublicAuthLoginRoute
+  '/auth/google/callback': typeof publicPublicAuthGoogleCallbackRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof authenticateddashboardDashboardRouteWithChildren
+  '': typeof publicPublicAuthRoute
   '/applications': typeof authenticateddashboardDashboardApplicationsRoute
   '/dashboard': typeof authenticateddashboardDashboardDashboardRoute
   '/find-jobs': typeof authenticateddashboardDashboardFindJobsRoute
   '/resume': typeof authenticateddashboardDashboardResumeRoute
+  '/auth/login': typeof publicPublicAuthLoginRoute
+  '/auth/google/callback': typeof publicPublicAuthGoogleCallbackRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof authenticateddashboardRouteWithChildren
   '/_authenticated': typeof authenticatedAuthenticatedRoute
+  '/_public': typeof publicPublicRouteWithChildren
   '/_dashboard': typeof authenticateddashboardDashboardRouteWithChildren
+  '/_public/_auth': typeof publicPublicAuthRoute
   '/_dashboard/applications': typeof authenticateddashboardDashboardApplicationsRoute
   '/_dashboard/dashboard': typeof authenticateddashboardDashboardDashboardRoute
   '/_dashboard/find-jobs': typeof authenticateddashboardDashboardFindJobsRoute
   '/_dashboard/resume': typeof authenticateddashboardDashboardResumeRoute
+  '/_public/auth/login': typeof publicPublicAuthLoginRoute
+  '/_public/auth/google/callback': typeof publicPublicAuthGoogleCallbackRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/applications' | '/dashboard' | '/find-jobs' | '/resume'
+  fullPaths:
+    | '/'
+    | ''
+    | '/applications'
+    | '/dashboard'
+    | '/find-jobs'
+    | '/resume'
+    | '/auth/login'
+    | '/auth/google/callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/applications' | '/dashboard' | '/find-jobs' | '/resume'
+  to:
+    | '/'
+    | ''
+    | '/applications'
+    | '/dashboard'
+    | '/find-jobs'
+    | '/resume'
+    | '/auth/login'
+    | '/auth/google/callback'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/_public'
     | '/_dashboard'
+    | '/_public/_auth'
     | '/_dashboard/applications'
     | '/_dashboard/dashboard'
     | '/_dashboard/find-jobs'
     | '/_dashboard/resume'
+    | '/_public/auth/login'
+    | '/_public/auth/google/callback'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   authenticatedRoute: typeof authenticatedRouteWithChildren
-  publicIndexRoute: typeof publicIndexRoute
+  publicRoute: typeof publicRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   authenticatedRoute: authenticatedRouteWithChildren,
-  publicIndexRoute: publicIndexRoute,
+  publicRoute: publicRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -288,6 +398,15 @@ export const routeTree = rootRoute
       "filePath": "(authenticated)/_authenticated.tsx",
       "parent": "/"
     },
+    "/_public": {
+      "filePath": "(public)/_public.tsx",
+      "parent": "/",
+      "children": [
+        "/_public/_auth",
+        "/_public/auth/login",
+        "/_public/auth/google/callback"
+      ]
+    },
     "/_dashboard": {
       "filePath": "(authenticated)/(dashboard)/_dashboard.tsx",
       "parent": "/",
@@ -297,6 +416,10 @@ export const routeTree = rootRoute
         "/_dashboard/find-jobs",
         "/_dashboard/resume"
       ]
+    },
+    "/_public/_auth": {
+      "filePath": "(public)/_public/_auth.tsx",
+      "parent": "/_public"
     },
     "/_dashboard/applications": {
       "filePath": "(authenticated)/(dashboard)/_dashboard/applications.tsx",
@@ -313,6 +436,14 @@ export const routeTree = rootRoute
     "/_dashboard/resume": {
       "filePath": "(authenticated)/(dashboard)/_dashboard/resume.tsx",
       "parent": "/_dashboard"
+    },
+    "/_public/auth/login": {
+      "filePath": "(public)/_public/auth/login.tsx",
+      "parent": "/_public"
+    },
+    "/_public/auth/google/callback": {
+      "filePath": "(public)/_public/auth/google/callback.tsx",
+      "parent": "/_public"
     }
   }
 }
