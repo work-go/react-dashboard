@@ -1,9 +1,9 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
-import VerticalNav from '../../../components/layout/vertical-nav'
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import VerticalNav from "../../components/layout/vertical-nav";
 
-export const Route = createFileRoute('/_authenticated/_dashboard')({
+export const Route = createFileRoute("/_authenticated/_dashboard")({
   component: Dashboard,
-})
+});
 
 function Dashboard() {
   return (
@@ -17,5 +17,5 @@ function Dashboard() {
         </div>
       </div>
     </>
-  )
+  );
 }

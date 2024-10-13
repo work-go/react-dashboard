@@ -1,20 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "../../../lib/api";
 import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
+import { GoogleLoginResponseSchema } from "../../../generated/rpc/auth-schema";
 
 export const Route = createFileRoute("/_public/auth/login")({
   component: () => <LoginRoute />,
+  validateSearch: z
+    .object({ redirect_uri: z.string().optional().default("/dashboard") })
+    .optional()
+    .default({ redirect_uri: "/dashboard" }),
 });
 
 function LoginRoute() {
+  const { redirect_uri } = Route.useSearch();
   const loginMutation = useMutation({
     mutationFn: () =>
-      api<{ authorization_url: string }>("/v1/auth/google/login", {
+      api<z.infer<typeof GoogleLoginResponseSchema>>("/v1/auth/google/login", {
         method: "GET",
         credentials: "include",
       }),
-    onSuccess: ({ authorization_url }) => {
-      window.open(authorization_url, "_self");
+    onSuccess: ({ authorizationUrl }) => {
+      localStorage.setItem("redirect_uri", redirect_uri);
+      window.open(authorizationUrl, "_self");
     },
   });
   return (

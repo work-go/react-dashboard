@@ -1,33 +1,21 @@
-import { queryOptions, useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { z } from "zod";
-import { api } from "../../../../lib/api";
-import { GoogleCallbackSearchSchema } from "../../../../generated/rpc/auth-schema";
-
-const googleOauthCallbackQuery = (
-  params: z.infer<typeof GoogleCallbackSearchSchema>
-) =>
-  queryOptions({
-    queryKey: ["google_oauth_callback", params],
-    queryFn: () =>
-      api("/v1/auth/google/callback", {
-        method: "GET",
-        params,
-      }),
-    staleTime: 0,
-  });
+import { userQuery } from "../../../../queries/user-query";
+import { googleCallbackQuery } from "../../../../queries/oauth-google-query";
 
 export const Route = createFileRoute("/_public/auth/google/callback")({
-  component: GoogleCallbackRoute,
-  validateSearch: (search) =>
-    z.object({ code: z.string(), state: z.string() }).parse(search),
+  component: () => null,
+  validateSearch: z.object({ code: z.string(), state: z.string() }),
   loaderDeps: ({ search }) => ({ search }),
-  loader: ({ context: { queryClient }, deps: { search } }) =>
-    queryClient.ensureQueryData(googleOauthCallbackQuery(search)),
+  beforeLoad: async ({ context: { queryClient }, search }) => {
+    await queryClient.fetchQuery(
+      googleCallbackQuery({ code: search.code, state: search.state })
+    );
+    await queryClient.fetchQuery(userQuery);
+    const redirect_uri = localStorage.getItem("redirect_uri") || "/dashboard";
+    localStorage.removeItem("redirect_uri");
+    throw redirect({
+      to: redirect_uri,
+    });
+  },
 });
-
-function GoogleCallbackRoute() {
-  const search = Route.useSearch();
-  const { data } = useQuery(googleOauthCallbackQuery(search));
-  return <pre>{JSON.stringify(data, null, 2)}</pre>;
-}
