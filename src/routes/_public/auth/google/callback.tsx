@@ -1,8 +1,8 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { api } from "../../../../../lib/api";
-import { GoogleCallbackSearchSchema } from "../../../../../generated/rpc/auth-schema";
+import { api } from "../../../../lib/api";
+import { GoogleCallbackSearchSchema } from "../../../../generated/rpc/auth-schema";
 
 const googleOauthCallbackQuery = (
   params: z.infer<typeof GoogleCallbackSearchSchema>
@@ -17,7 +17,7 @@ const googleOauthCallbackQuery = (
     staleTime: 0,
   });
 
-export const Route = createFileRoute("/(public)/_public/auth/google/callback")({
+export const Route = createFileRoute("/_public/auth/google/callback")({
   component: GoogleCallbackRoute,
   validateSearch: (search) =>
     z.object({ code: z.string(), state: z.string() }).parse(search),

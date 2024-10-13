@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { api } from "../../../../lib/api";
+import { api } from "../../../lib/api";
 import { useMutation } from "@tanstack/react-query";
 
-export const Route = createFileRoute("/(public)/_public/auth/login")({
+export const Route = createFileRoute("/_public/auth/login")({
   component: () => <LoginRoute />,
 });
 
