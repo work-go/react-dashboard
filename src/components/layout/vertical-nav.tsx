@@ -4,14 +4,14 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import {
   Briefcase,
-  ChevronDown,
   Dock,
   FileUser,
   LayoutDashboard,
   LucideProps,
   MessageCircle,
 } from "lucide-react";
-import { FC, PropsWithChildren, RefAttributes } from "react";
+import { FC, PropsWithChildren, RefAttributes, useState } from "react";
+import CompanyUi from "../sub-components/company-ui";
 
 const NavLink: FC<
   PropsWithChildren<{
@@ -43,31 +43,40 @@ const NavLink: FC<
   );
 };
 
+const companies = [
+  {
+    name: "Work Go",
+    domain: "app.workgo.com",
+    logo: "/logo.png",
+  },
+  {
+    name: "Google",
+    domain: "google.com",
+    logo: "/google.png",
+  },
+  {
+    name: "Facebook",
+    domain: "facebook.com",
+    logo: "/facebook.png",
+  },
+  {
+    name: "Amazon",
+    domain: "amazon.com",
+    logo: "/amazon.png",
+  },
+];
+
 export default function VerticalNav() {
+  const [selectedCompany, setSelectedCompany] = useState(companies[0]);
   return (
     <div className="h-screen w-[300px] fixed bg-[#161618] text-white overflow-auto flex flex-col  p-3 gap-3">
-      <div className="flex items-center justify-start gap-2 px-6 py-3 rounded-lg hover:bg-[#101012] cursor-pointer transition-colors group">
-        <img src="/logo.png" alt="Work Go" className="w-14 h-14" />
-        <div className="w-full flex justify-between gap-2">
-          <div className="space-y-1.5">
-            <h1 className="font-bold text-2xl leading-4">Work Go</h1>
-            <p className="text-gray-100 group-hover:text-white transition-colors tracking-widest font-extralight text-xs">
-              app.workgo.com
-            </p>
-          </div>
-
-          <button
-            type="button"
-            className="text-gray-100 group-hover:text-[#99ff00] transition-colors shrink-0"
-          >
-            <ChevronDown className="w-4 h-4" />
-          </button>
-        </div>
+      <div>
+        <CompanyUi
+          {...selectedCompany}
+          onClick={setSelectedCompany}
+          companies={companies}
+        />
       </div>
-
-      {/* <button className="p-2 rounded hover:bg-[#101012] text-gray-100 shrink-0 -mr-2">
-            <ArrowLeftFromLine className="w-4 h-4" />
-          </button> */}
 
       <SimpleBar className="flex flex-col h-full max-h-[400px] pb-5">
         <div className="space-y-4">
@@ -96,10 +105,10 @@ export default function VerticalNav() {
           </div>
         </div>
       </SimpleBar>
-      <div className="flex flex-col gap-10 mt-6">
+      <div className="flex flex-col gap-10 px-6 mt-6">
         <div className="flex items-center gap-2">
           <MessageCircle className="w-5 h-5" />
-          <p className="text-md">Inbox</p>
+          <p className="text-md">Need help?</p>
         </div>
         <div className="flex items-center gap-2">
           <img
