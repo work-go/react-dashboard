@@ -13,6 +13,7 @@ export const safeTryAsync = async <T>(
 ): Promise<[T, null] | [null, AnyError]> => {
   try {
     const data = await promise();
+    console.log("safeTryAsync: data", data);
     return [data, null];
   } catch (throwable) {
     if (throwable instanceof Error) {

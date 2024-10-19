@@ -20,8 +20,9 @@ function LoginRoute() {
         method: "GET",
         credentials: "include",
       }),
-    onSuccess: ({ authorizationUrl }) => {
+    onSuccess: ({ authorizationUrl, codeVerifier }) => {
       localStorage.setItem("redirect_uri", redirect_uri);
+      localStorage.setItem("codeVerifier", codeVerifier);
       window.open(authorizationUrl, "_self");
     },
   });

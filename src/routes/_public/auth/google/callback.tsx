@@ -8,10 +8,11 @@ export const Route = createFileRoute("/_public/auth/google/callback")({
   validateSearch: z.object({ code: z.string(), state: z.string() }),
   loaderDeps: ({ search }) => ({ search }),
   beforeLoad: async ({ context: { queryClient }, search }) => {
-    await queryClient.fetchQuery(
+    const { token } = await queryClient.fetchQuery(
       googleCallbackQuery({ code: search.code, state: search.state })
     );
-    await queryClient.fetchQuery(userQuery);
+    localStorage.setItem("authToken", token);
+    await queryClient.fetchQuery(userQuery(token));
     const redirect_uri = localStorage.getItem("redirect_uri") || "/dashboard";
     localStorage.removeItem("redirect_uri");
     throw redirect({

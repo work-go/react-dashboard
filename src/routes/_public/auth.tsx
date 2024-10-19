@@ -5,7 +5,10 @@ import { userQuery } from "../../queries/user-query";
 export const Route = createFileRoute("/_public/auth")({
   component: AuthLayout,
   beforeLoad: async ({ context: { queryClient } }) => {
-    const [user] = await safeTryAsync(() => queryClient.fetchQuery(userQuery));
+    const token = localStorage.getItem("authToken")!;
+    const [user] = await safeTryAsync(() =>
+      queryClient.fetchQuery(userQuery(token))
+    );
     if (user)
       throw redirect({
         to: "/dashboard",

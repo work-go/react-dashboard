@@ -5,7 +5,10 @@ import { safeTryAsync } from "../lib/safe-try";
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
   beforeLoad: async ({ context: { queryClient }, location }) => {
-    const [user] = await safeTryAsync(() => queryClient.fetchQuery(userQuery));
+    const token = localStorage.getItem("authToken")!;
+    const [user] = await safeTryAsync(() =>
+      queryClient.fetchQuery(userQuery(token))
+    );
     if (!user)
       throw redirect({
         to: "/auth/login",

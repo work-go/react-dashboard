@@ -4,8 +4,12 @@ import { z } from "zod";
 import { UserSchema } from "../generated/rpc/user-schema";
 import { QueryKeys } from "./__query-keys";
 
-export const userQuery = queryOptions({
-  queryKey: [QueryKeys.USER],
-  queryFn: () => api<z.infer<typeof UserSchema>>("/v1/auth/verify"),
-  staleTime: Infinity,
-});
+export const userQuery = (token: string) =>
+  queryOptions({
+    queryKey: [QueryKeys.USER, token],
+    queryFn: () =>
+      api<z.infer<typeof UserSchema>>("/v1/auth/verify", {
+        headers: { authorization: `Bearer ${token}` },
+      }),
+    staleTime: Infinity,
+  });
