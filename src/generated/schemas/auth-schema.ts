@@ -1,5 +1,5 @@
-import { c } from "ofetch/dist/shared/ofetch.d0b3d489";
 import { z } from "zod";
+import { UserSchema } from "./user-schema";
 
 export const GenericErrorSchema = z.object({
   message: z.string(),
@@ -28,11 +28,13 @@ export const RegisterSchema = z
     path: ["passwordConfirm"],
   });
 
+export const RegisterResponseSchema = z.object({
+  user: UserSchema,
+  sessionToken: z.string(),
+});
+
 export const LoginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Please enter your email")
-    .email("Please enter a valid email"),
+  email: z.string().min(1, "Please enter your email").email("Please enter a valid email"),
   password: z.string(),
 });
 
@@ -53,7 +55,4 @@ export const GoogleCallbackUserSchema = z.object({
 
 export const GoogleCallbackSearchSchema = z.object({
   code: z.string(),
-  state: z.string(),
 });
-
-export const GoogleCallbackResponseSchema = z.object({ token: z.string() });
