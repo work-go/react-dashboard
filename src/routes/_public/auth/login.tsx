@@ -3,7 +3,10 @@ import { api } from "../../../lib/api";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { LocalStorageKeys } from "../../../lib/local-storage";
-import { GoogleLoginResponseSchema } from "../../../generated/schemas/auth-schema";
+import {
+  GoogleLoginResponseSchema,
+  LoginSchema,
+} from "../../../generated/schemas/auth-schema";
 
 export const Route = createFileRoute("/_public/auth/login")({
   component: () => <LoginRoute />,
@@ -15,7 +18,7 @@ export const Route = createFileRoute("/_public/auth/login")({
 
 function LoginRoute() {
   const { redirect_uri } = Route.useSearch();
-  const loginMutation = useMutation({
+  const loginWithGoogleMutation = useMutation({
     mutationFn: () =>
       api<z.infer<typeof GoogleLoginResponseSchema>>("/v1/auth/google/login", {
         method: "GET",
@@ -27,9 +30,22 @@ function LoginRoute() {
       window.open(authorizationUrl, "_self");
     },
   });
+
+  const loginMutation = useMutation({
+    mutationFn: () =>
+      api<z.infer<typeof LoginSchema>>("/v1/auth/login", {
+        method: "POST",
+        body: {},
+      }),
+  });
+
   return (
     <>
-      <button onClick={() => loginMutation.mutate()}>Login with Google</button>
+      <button onClick={() => loginWithGoogleMutation.mutate()}>
+        Login with Google
+      </button>
+
+      <button onClick={() => loginMutation.mutate()}>Login</button>
     </>
   );
 }
