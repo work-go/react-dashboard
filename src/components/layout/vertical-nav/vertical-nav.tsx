@@ -1,5 +1,5 @@
 import { Link, LinkProps, useLocation } from "@tanstack/react-router";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import {
@@ -11,7 +11,8 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { FC, PropsWithChildren, RefAttributes, useState } from "react";
-import CompanyUi from "../sub-components/company-ui";
+import WorkspaceDropdown from "./workspace-dropdown";
+import { workspaces, WorkspaceType } from "@/data/workspaces";
 
 const NavLink: FC<
   PropsWithChildren<{
@@ -43,38 +44,17 @@ const NavLink: FC<
   );
 };
 
-const companies = [
-  {
-    name: "Work Go",
-    domain: "app.workgo.com",
-    logo: "/logo.png",
-  },
-  {
-    name: "Google",
-    domain: "google.com",
-    logo: "/google.png",
-  },
-  {
-    name: "Facebook",
-    domain: "facebook.com",
-    logo: "/facebook.png",
-  },
-  {
-    name: "Amazon",
-    domain: "amazon.com",
-    logo: "/amazon.png",
-  },
-];
-
 export default function VerticalNav() {
-  const [selectedCompany, setSelectedCompany] = useState(companies[0]);
+  const [selectedWorkspace, setSelectedWorkspace] = useState<WorkspaceType>(
+    workspaces[0]
+  );
   return (
     <div className="h-screen w-[300px] fixed bg-[#161618] text-white overflow-auto flex flex-col  p-3 gap-3">
       <div>
-        <CompanyUi
-          {...selectedCompany}
-          onClick={setSelectedCompany}
-          companies={companies}
+        <WorkspaceDropdown
+          selectedWorkspace={selectedWorkspace}
+          onChangeWorkspace={setSelectedWorkspace}
+          workspaces={workspaces}
         />
       </div>
 
