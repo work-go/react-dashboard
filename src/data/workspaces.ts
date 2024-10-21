@@ -19,8 +19,6 @@ export const workspaces = [
     domain: "amazon.com",
     logo: "/amazon.png",
   },
-] as const;
+];
 
-export type WorkspacesType = typeof workspaces;
-
-export type WorkspaceType = (typeof workspaces)[number];
+export type Workspace = (typeof workspaces)[number];

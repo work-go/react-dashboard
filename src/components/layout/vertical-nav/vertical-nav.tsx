@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { FC, PropsWithChildren, RefAttributes, useState } from "react";
 import WorkspaceDropdown from "./workspace-dropdown";
-import { workspaces, WorkspaceType } from "@/data/workspaces";
+import { workspaces, Workspace } from "@/data/workspaces";
 
 const NavLink: FC<
   PropsWithChildren<{
@@ -45,7 +45,7 @@ const NavLink: FC<
 };
 
 export default function VerticalNav() {
-  const [selectedWorkspace, setSelectedWorkspace] = useState<WorkspaceType>(
+  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>(
     workspaces[0]
   );
   return (
@@ -54,7 +54,6 @@ export default function VerticalNav() {
         <WorkspaceDropdown
           selectedWorkspace={selectedWorkspace}
           onChangeWorkspace={setSelectedWorkspace}
-          workspaces={workspaces}
         />
       </div>
 
