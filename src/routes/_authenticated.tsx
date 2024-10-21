@@ -12,8 +12,10 @@ export const Route = createFileRoute("/_authenticated")({
         search: {
           redirect_uri: location.href,
         },
+
       });
     });
+
   },
 });
 
