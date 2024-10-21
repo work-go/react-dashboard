@@ -1,19 +1,31 @@
 import { z } from "zod";
-import { GoogleCallbackSearchSchema } from "../generated/rpc/auth-schema";
 import { queryOptions } from "@tanstack/react-query";
-import { api } from "../lib/api";
-import { UserSchema } from "../generated/rpc/user-schema";
+import { unprotectedApi } from "../lib/api";
 import { QueryKeys } from "./__query-keys";
+import {
+  GoogleCallbackSearchSchema,
+  RegisterResponseSchema,
+} from "../generated/schemas/auth-schema";
 
 export const googleCallbackQuery = (
-  params: z.infer<typeof GoogleCallbackSearchSchema>
-) =>
-  queryOptions({
+  params: z.infer<typeof GoogleCallbackSearchSchema> & {
+    codeVerifier: string | null;
+  }
+) => {
+  const { codeVerifier, ...searchParams } = params;
+  return queryOptions({
     queryKey: [QueryKeys.OAUTH_GOOGLE, params],
     queryFn: () =>
-      api<z.infer<typeof UserSchema>>("/v1/auth/google/callback", {
-        method: "GET",
-        params,
-      }),
+      unprotectedApi<z.infer<typeof RegisterResponseSchema>>(
+        "/v1/auth/google/callback",
+        {
+          method: "GET",
+          params: searchParams,
+          headers: {
+            authorization: `Bearer ${codeVerifier}`,
+          },
+        }
+      ),
     staleTime: 0,
   });
+};
