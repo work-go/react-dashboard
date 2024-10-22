@@ -7,8 +7,9 @@ import {
   DropdownMenuTrigger,
   DropdownMenuArrow,
   DropdownMenuPortal,
+  DropdownMenuSeparator,
 } from "@radix-ui/react-dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Plus } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 
 const WorkspaceUiUnit = ({ workspace }: { workspace: Workspace }) => {
@@ -85,6 +86,13 @@ export default function WorkspaceDropdown({
                   <WorkspaceUiUnit workspace={workspace} />
                 </DropdownMenuItem>
               ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="flex items-center justify-start gap-4 px-2 py-2 transition-colors rounded-lg outline-none cursor-pointer hover:bg-neutral-200 group hover:outline-none">
+                <Plus className="w-7 h-7" />
+                <div className="text-base font-bold leading-3 text-black">
+                  Add Workspace
+                </div>
+              </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenuPortal>
