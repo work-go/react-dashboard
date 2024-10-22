@@ -1,0 +1,22 @@
+diff --git a/node_modules/openapi-fetch/dist/index.d.ts b/node_modules/openapi-fetch/dist/index.d.ts
+index 4941612..306244c 100644
+--- a/node_modules/openapi-fetch/dist/index.d.ts
++++ b/node_modules/openapi-fetch/dist/index.d.ts
+@@ -110,6 +110,8 @@ export type FetchResponse<T, Options, Media extends MediaType> =
+       response: Response;
+     };
+ 
++type PatchedFetchResponse<T, Options, Media extends MediaType> = ParseAsResponse<SuccessResponse<ResponseObjectMap<T>, Media>, Options>;
++
+ export type RequestOptions<T> = ParamsOption<T> &
+   RequestBodyOption<T> & {
+     baseUrl?: string;
+@@ -185,7 +187,7 @@ export type ClientMethod<
+ > = <Path extends PathsWithMethod<Paths, Method>, Init extends MaybeOptionalInit<Paths[Path], Method>>(
+   url: Path,
+   ...init: InitParam<Init>
+-) => Promise<FetchResponse<Paths[Path][Method], Init, Media>>;
++) => Promise<PatchedFetchResponse<Paths[Path][Method], Init, Media>>;
+ 
+ export type ClientForPath<PathInfo, Media extends MediaType> = {
+   [Method in keyof PathInfo as Uppercase<string & Method>]: <Init extends MaybeOptionalInit<PathInfo, Method>>(
