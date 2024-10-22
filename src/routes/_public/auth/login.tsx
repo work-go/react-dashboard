@@ -3,10 +3,7 @@ import { unprotectedApi } from "../../../lib/api";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { LocalStorageKeys } from "../../../lib/local-storage";
-import {
-  GoogleLoginResponseSchema,
-  LoginSchema,
-} from "../../../generated/schemas/auth-schema";
+import { LoginSchema } from "../../../generated/schemas/auth-schema";
 import { LockKeyhole, Mail } from "lucide-react";
 import { ValidationError } from "../../../generated/errors/validation-error";
 import { useForm } from "react-hook-form";
@@ -29,14 +26,7 @@ export const Route = createFileRoute("/_public/auth/login")({
 function LoginRoute() {
   const { redirect_uri, error } = Route.useSearch();
   const loginWithGoogleMutation = useMutation({
-    mutationFn: () =>
-      unprotectedApi<z.infer<typeof GoogleLoginResponseSchema>>(
-        "/v1/auth/google/login",
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      ),
+    mutationFn: () => unprotectedApi.GET("/v1/auth/google/login"),
     onSuccess: ({ authorizationUrl, codeVerifier }) => {
       localStorage.setItem(LocalStorageKeys.REDIRECT_URI, redirect_uri);
       localStorage.setItem(LocalStorageKeys.CODE_VERIFIER, codeVerifier);
@@ -46,8 +36,7 @@ function LoginRoute() {
 
   const loginMutation = useMutation({
     mutationFn: (values: { email: string; password: string }) =>
-      unprotectedApi<z.infer<typeof LoginSchema>>("/v1/auth/login", {
-        method: "POST",
+      unprotectedApi.POST("/v1/auth/login", {
         body: values,
       }),
     onError: (error) => {
