@@ -12,7 +12,7 @@ function Dashboard() {
         <div>
           <VerticalNav></VerticalNav>
         </div>
-        <div className="min-h-screen ml-[300px] p-10">
+        <div className="min-h-screen ml-[300px] p-10 w-full">
           <Outlet />
         </div>
       </div>
