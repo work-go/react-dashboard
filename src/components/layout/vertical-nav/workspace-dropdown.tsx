@@ -21,11 +21,11 @@ const WorkspaceUiUnit = ({ workspace }: { workspace: Workspace }) => {
         className="object-cover rounded-lg w-7 h-7"
       />
       <div className="flex justify-between w-full gap-2">
-        <div className="space-y-1.5">
-          <h1 className="text-base font-bold leading-3 text-black">
+        <div>
+          <h1 className="text-base font-bold text-black truncate max-w-[150px]">
             {workspace.name}
           </h1>
-          <p className="text-[10px] tracking-widest text-black transition-colors font-extralight">
+          <p className="text-[10px] tracking-widest text-black transition-colors font-extralight truncate max-w-[150px]">
             {workspace.domain}
           </p>
         </div>
@@ -51,12 +51,12 @@ export default function WorkspaceDropdown({
               alt="Work Go"
               className="object-cover w-14 h-14 rounded-2xl"
             />
-            <div className="flex justify-between w-full gap-2">
-              <div className="space-y-1.5">
-                <h1 className="text-2xl font-bold leading-4">
+            <div className="flex justify-between w-full">
+              <div>
+                <h1 className="text-2xl font-bold truncate  max-w-[200px]">
                   {selectedWorkspace.name}
                 </h1>
-                <p className="text-xs tracking-widest text-gray-100 transition-colors group-hover:text-white font-extralight">
+                <p className="text-xs tracking-widest text-gray-100 truncate transition-colors group-hover:text-white font-extralight max-w-[200px]">
                   {selectedWorkspace.domain}
                 </p>
               </div>
