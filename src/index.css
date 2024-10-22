@@ -63,4 +63,31 @@
   body {
     @apply bg-background text-foreground;
   }
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('/fonts/Roboto-Regular.ttf') format('truetype');
 }
+@font-face {
+    font-family: 'Roboto-Bold';
+    src: url('/fonts/Roboto-Bold.ttf') format('truetype');
+}
+
+/* create a new font with roboto-black */
+@font-face {
+    font-family: 'Roboto-Black';
+    src: url('/fonts/Roboto-Black.ttf') format('truetype');
+}
+/* create a new font with roboto-medium */
+@font-face {
+    font-family: 'Roboto-Medium';
+    src: url('/fonts/Roboto-Medium.ttf') format('truetype');
+}
+*{
+    font-family: 'Roboto', sans-serif;
+}
+@layer base {
+  :root {
+        --radius: 0.5rem;
+    }
+}}

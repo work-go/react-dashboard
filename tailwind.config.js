@@ -46,6 +46,13 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
+  			
+  		},
+  		fontFamily: {
+  			'roboto-regular': ['Roboto-Regular', 'sans-serif'],
+  			'roboto-bold': ['Roboto-Bold', 'sans-serif'],
+  			'roboto-black': ['Roboto-black', 'sans-serif'],
+  			'roboto-medium': ['Roboto-Medium', 'sans-serif']
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
