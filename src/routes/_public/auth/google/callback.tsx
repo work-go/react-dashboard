@@ -3,6 +3,7 @@ import { z } from "zod";
 import { userQuery } from "../../../../queries/user-query";
 import { googleCallbackQuery } from "../../../../queries/oauth-google-query";
 import { LocalStorageKeys } from "../../../../lib/local-storage";
+import { unprotectedApi } from "../../../../lib/api";
 
 export const Route = createFileRoute("/_public/auth/google/callback")({
   component: () => null,
@@ -13,8 +14,14 @@ export const Route = createFileRoute("/_public/auth/google/callback")({
     const { sessionToken, user } = await queryClient.fetchQuery(
       googleCallbackQuery({ code: search.code, codeVerifier })
     );
+
     localStorage.setItem(LocalStorageKeys.SESSION_TOKEN, sessionToken);
-    await queryClient.setQueryData(userQuery(sessionToken).queryKey, user);
+
+    queryClient.setQueryData(userQuery(sessionToken).queryKey, {
+      sessionToken,
+      user,
+    });
+
     const redirect_uri =
       localStorage.getItem(LocalStorageKeys.REDIRECT_URI) || "/dashboard";
 
